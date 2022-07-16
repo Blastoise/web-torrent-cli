@@ -39,6 +39,7 @@ const options = {
     dlna: { desc: "DNLA", type: "boolean" },
     mplayer: { desc: "MPlayer", type: "boolean" },
     mpv: { desc: "MPV", type: "boolean" },
+    celluloid: { desc: "Celluloid", type: "boolean" },
     omx: { desc: "OMX", defaultDescription: "hdmi" },
     vlc: { desc: "VLC", type: "boolean" },
     iina: { desc: "IINA", type: "boolean" },
@@ -200,6 +201,7 @@ const playerArgs = {
   vlc: ["", "--play-and-exit", "--quiet"],
   iina: ["/Applications/IINA.app/Contents/MacOS/iina-cli", "--keep-running"],
   mpv: ["mpv", "--really-quiet", "--loop=no"],
+  celluloid: ["celluloid", "--mpv-loop=no"],
   mplayer: ["mplayer", "-really-quiet", "-noidx", "-loop", "0"],
   smplayer: ["smplayer", "-close-at-end"],
   omx: [
@@ -344,6 +346,7 @@ function init(_argv) {
     playerArgs.vlc.push(`--sub-file=${subtitles}`);
     playerArgs.mplayer.push(`-sub ${subtitles}`);
     playerArgs.mpv.push(`--sub-file=${subtitles}`);
+    playerArgs.celluloid.push(`--mpv-sub-file=${subtitles}`);
     playerArgs.omx.push(`--subtitles ${subtitles}`);
     playerArgs.smplayer.push(`-sub ${subtitles}`);
 
@@ -364,6 +367,7 @@ function init(_argv) {
     playerArgs.vlc.push("--video-on-top");
     playerArgs.mplayer.push("-ontop");
     playerArgs.mpv.push("--ontop");
+    playerArgs.celluloid.push("--mpv-ontop");
     playerArgs.smplayer.push("-ontop");
   }
 
@@ -623,7 +627,7 @@ async function runDownload(torrentId) {
     let allHrefs = [];
     if (
       argv.playlist &&
-      (argv.mpv || argv.mplayer || argv.vlc || argv.smplayer)
+      (argv.mpv || argv.celluloid || argv.mplayer || argv.vlc || argv.smplayer)
     ) {
       // set the selected to the first file if not specified
       if (typeof argv.select !== "number") {
@@ -688,6 +692,10 @@ async function runDownload(torrentId) {
       argv.playlist
         ? openPlayer(playerArgs.mpv.concat(allHrefs))
         : openPlayer(playerArgs.mpv.concat(JSON.stringify(href)));
+    } else if (argv.celluloid) {
+      argv.playlist
+        ? openPlayer(playerArgs.celluloid.concat(allHrefs))
+        : openPlayer(playerArgs.celluloid.concat(JSON.stringify(href)));
     } else if (argv.omx) {
       openPlayer(playerArgs.omx.concat(JSON.stringify(href)));
     } else if (argv.smplayer) {
@@ -1119,6 +1127,7 @@ function processInputs(inputs, fn) {
         "dlna",
         "mplayer",
         "mpv",
+        "celluloid",
         "omx",
         "vlc",
         "iina",
