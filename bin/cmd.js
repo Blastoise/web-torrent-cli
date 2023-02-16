@@ -669,16 +669,13 @@ async function runDownload(torrentId) {
     }
 
     if (argv.vlc) {
-      if (os.release().toLowerCase().includes("microsoft")) {
-        playerArgs.vlc[0] = "/mnt/c/Program Files/VideoLAN/VLC/vlc.exe";
-      } else {
-        vlcCommand((err, vlcCmd) => {
-          if (err) {
-            return fatalError(err);
-          }
-          playerArgs.vlc[0] = vlcCmd;
-        });
-      }
+      vlcCommand((err, vlcCmd) => {
+        if (err) {
+          return fatalError(err);
+        }
+        playerArgs.vlc[0] = vlcCmd;
+      });
+
       argv.playlist
         ? openPlayer(playerArgs.vlc.concat(allHrefs))
         : openPlayer(playerArgs.vlc.concat(JSON.stringify(href)));
