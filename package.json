@@ -1,7 +1,7 @@
 {
   "name": "@ashutosh1729/web-torrent-cli",
   "type": "module",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Fork of webtorrent-cli with addtional features",
   "main": "index.js",
   "bin": {

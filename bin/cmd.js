@@ -674,11 +674,10 @@ async function runDownload(torrentId) {
           return fatalError(err);
         }
         playerArgs.vlc[0] = vlcCmd;
+        argv.playlist
+          ? openPlayer(playerArgs.vlc.concat(allHrefs))
+          : openPlayer(playerArgs.vlc.concat(JSON.stringify(href)));
       });
-
-      argv.playlist
-        ? openPlayer(playerArgs.vlc.concat(allHrefs))
-        : openPlayer(playerArgs.vlc.concat(JSON.stringify(href)));
     } else if (argv.iina) {
       open(`iina://weblink?url=${href}`, { wait: true }).then(playerExit);
     } else if (argv.mplayer) {
